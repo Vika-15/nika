@@ -1,0 +1,7 @@
+{
+    "version": 20200513,
+    "zip-command": "zip Vision.zip Vision\/app.json Vision\/entities\/*.json Vision\/intents\/*.json Vision\/traits\/*.json Vision\/utterances\/*.json Vision\/composer\/*.json",
+    "name": "Vision",
+    "lang": "ru",
+    "timezone": "Europe\/Minsk"
+}
