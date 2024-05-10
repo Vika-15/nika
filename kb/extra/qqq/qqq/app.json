@@ -1,0 +1,7 @@
+{
+    "version": 20200513,
+    "zip-command": "zip qqq.zip qqq\/app.json qqq\/entities\/*.json qqq\/intents\/*.json qqq\/traits\/*.json qqq\/utterances\/*.json qqq\/composer\/*.json",
+    "name": "qqq",
+    "lang": "ru",
+    "timezone": "Europe\/Minsk"
+}
