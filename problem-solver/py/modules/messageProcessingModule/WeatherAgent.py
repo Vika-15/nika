@@ -37,6 +37,11 @@ logging.basicConfig(
 
 class WeatherAgent(ScAgentClassic):
     def __init__(self):
+        self.weather_codes = {
+            0: 'Чистое небо', 1: 'В основном ясно' , 2: 'Переменная облачность', 3: 'Пасмурно', 45: 'Туман', 48: 'Туман с отложением изморози', 51: 'Слабый моросящий дождь', 53: 'Средний моросящий дождь',  
+            55: 'Сильный моросящий дождь', 56: 'Слабый моросящий морозный дождь', 57: 'Сильный моросящий морозный дождь', 61: 'Слабый дождь', 63: 'Средний дождь', 65: 'Сильный дождь', 66: 'Слабый ледяной дождь',
+            67: 'Сильный ледяной дождь', 71: 'Слабый снегопад', 73: 'Средний снегопад', 75: 'Сильный снегопад', 77: 'Град', 80: 'Слабый ливень', 81: 'Средний ливень', 82: 'Сильный ливень', 85: 'Слабый снежный ливень',
+            86: 'Сильный снежный ливень', 95: 'Гроза', 96: 'Гроза снебольшим градом', 99: 'Гроза с сильным градом'}
         super().__init__("action_show_weather")
 
     def on_event(self, event_element: ScAddr, event_edge: ScAddr, action_element: ScAddr) -> ScResult:
@@ -115,10 +120,10 @@ class WeatherAgent(ScAgentClassic):
         if country_addr is not None:
             country = get_link_content_data(self.get_ru_idtf(country_addr))
             coordinates = requests.get(
-                f'https://geocode.maps.co/search?city={entity_idtf}&country={country}').json()[0]
+                f'https://geocode.maps.co/search?city={entity_idtf}&country={country}&api_key=661937002f6dd511753691odv8a985d').json()[0]
         else:
             coordinates = requests.get(
-                f'https://geocode.maps.co/search?city={entity_idtf}').json()[0]
+                f'https://geocode.maps.co/search?city={entity_idtf}&api_key=661937002f6dd511753691odv8a985d').json()[0]
 
         # get weather
         response = requests.get(
@@ -128,10 +133,13 @@ class WeatherAgent(ScAgentClassic):
         weather_data = response.json()
         main_data = weather_data["current_weather"]
         temperature = main_data["temperature"]
+        weathercode=main_data['weathercode']
         self.logger.info(
             f"WeatherAgent: The temperature in {get_system_idtf(city_addr)} is {temperature}°C")
+        if main_data['weathercode'] and self.weather_codes[weathercode]:
+             temperature = str(temperature)+"°C."+self.weather_codes[main_data['weathercode']]
         return temperature
-
+        
     def set_unknown_city_link(self, action_node: ScAddr, answer_phrase: ScAddr) -> None:
         unknown_city_link = ScKeynodes.resolve(
             "unknown_city_for_weather_agent_message_text", None)
